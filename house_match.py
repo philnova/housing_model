@@ -14,7 +14,9 @@ def stable_match(renters, houses, increment = 1.05):
     """Gale-Shapley stable matching algorithm:
     In each round, renters bid for their most preferred house. All bids exceeding the
     asking price are accepted. If a higher bid is offered, previous renter is kicked out.
-    In subsequent rounds, all unmatched renters proceed as before. This continues until all renters are matched.
+    Each bid increases the asking price of the house by the increment argument.
+    In subsequent rounds, all unmatched renters proceed as before. This continues 
+    until all renters are matched.
 
     We make the simplifying assumption that all renters share the same preferences for houses.
     We also assume that renters want the highest-quality house with price below their maximum

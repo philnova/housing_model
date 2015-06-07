@@ -36,7 +36,9 @@ def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_hou
 
 	if higher_quality_houses:
 		houses.extend(create_houses(higher_quality_houses, 120, 10))
-		renters.extend(create_renters(higher_quality_houses / 2, 1500))
+		#assume that adding high-quality housing attracts more renters to the market; 
+		#currently we assume that for 2 added houses we add 1 renter, but should determine empirically!
+		renters.extend(create_renters(higher_quality_houses / 2, 1500)) 
 
 	if lower_quality_houses:
 		houses.extend(create_houses(lower_quality_houses, 80, 10))
@@ -49,7 +51,7 @@ def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_hou
 	#do stats
 
 	min_price = float("inf")
-	index = 0
+	index = 0 #need to keep track of how many houses were actually bid on, for calculating the median
 	for house in houses:
 		if house.current_price and house.current_price < min_price:
 			min_price = house.current_price
