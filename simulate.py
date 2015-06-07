@@ -12,6 +12,8 @@ import house_match
 
 
 def create_renters(n_renters, scaling_factor = 1000):
+	"""Renters are drawn from a chi**2 distribution with 4 DF,
+	and are right-shifted by the scaling_factor."""
 	renter_list = []
 	rvs = scipy.stats.chi2.rvs(df = 4, size=n_renters)
 	for index, r in enumerate(rvs):
@@ -19,6 +21,10 @@ def create_renters(n_renters, scaling_factor = 1000):
 	return renter_list
 	
 def create_houses(n_houses, mean_quality = 100, sd = 10):
+	"""House quality is drawn from the normal distribution.
+	N.B. that the quality of houses is used strictly for ranking,
+	so the actual distribution of house quality is not important so long
+	as their scores can be meaningfully ranked."""
 	house_list = []
 	samples = numpy.random.normal(mean_quality, sd, n_houses)
 	for index, sample in enumerate(samples):
@@ -30,6 +36,11 @@ def create_houses(n_houses, mean_quality = 100, sd = 10):
 #####################
 
 def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_houses = 0):
+	"""Run house_match with initial n_renters and n_houses. Arguments higher_quality_houses
+	and lower_quality_houses specify houses to be added to the initial pool, from quality distributions
+	shifted to the right or left of the initial housing distribution, respectively.
+	Adding x higher-quality homes is assumed to attract x/2 renters with high WTP, while adding
+	y lower-quality homes is not assumed to affect the renter pool."""
 
 	renters = create_renters(n_renters)
 	houses = create_houses(n_houses)
@@ -45,11 +56,9 @@ def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_hou
 		renters.extend(create_renters(lower_quality_houses / 2, 500))
 
 	houses = house_match.sort_houses_by_niceness(houses)
-
 	house_match.stable_match(renters, houses)
 
 	#do stats
-
 	min_price = float("inf")
 	index = 0 #need to keep track of how many houses were actually bid on, for calculating the median
 	for house in houses:
