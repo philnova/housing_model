@@ -20,7 +20,8 @@ def stable_match(renters, houses, increment = 1.05):
     We also assume that renters want the highest-quality house with price below their maximum
     willingness to pay.
 
-    Houses should be ordered from highest to lowest scores."""
+    Houses must be ordered from highest to lowest scores, which is accomplished by the
+    sort_houses_by_niceness function."""
 
     houses = sort_houses_by_niceness(houses)
 

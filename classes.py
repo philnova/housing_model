@@ -1,3 +1,15 @@
+"""Renter and House classes for house_match algorithm.
+
+Renters are assumed to have a fixed willingness to pay and
+want the nicest apartment they can afford.
+
+Houses have a niceness attribute. The initial price is set
+arbitrarily low and is bid up by Renters.
+
+Renters are assumed to have identical preferences for housing.
+Therefore the niceness attribute for Houses allows construction
+of an identical total ordering on Houses for all Renters."""
+
 class Renter(object):
     def __init__(self, willingness_to_pay, ID):
         self.ID = ID #integer representing order in an array

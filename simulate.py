@@ -1,7 +1,15 @@
+"""Simulation of the house_match model using the Renter
+and House classes defined in the classes module."""
+
 import scipy.stats
 import numpy.random
 import classes
 import house_match
+
+####################
+# GENERATE OBJECTS #
+####################
+
 
 def create_renters(n_renters, scaling_factor = 1000):
 	renter_list = []
@@ -16,6 +24,10 @@ def create_houses(n_houses, mean_quality = 100, sd = 10):
 	for index, sample in enumerate(samples):
 		house_list.append(classes.House(sample))
 	return house_list
+
+#####################
+# SINGLE SIMULATION #
+#####################
 
 def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_houses = 0):
 
@@ -49,6 +61,11 @@ def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_hou
 	median_price = renters[houses[index/2].rented_by].paying
 
 	return max_price, median_price, min_price
+
+
+#######################
+# REPEATED SIMULATION #
+#######################
 
 def simulate_addgeneral(n_trials):
 	"""Return the mean change in maximum, median, and minimum housing cost
@@ -86,9 +103,11 @@ def simulate_addexpensivehousing(n_trials):
 		min_diff.append(min_nohi - min_hi)
 	return sum(max_diff)/n_trials, sum(med_diff)/n_trials, sum(min_diff)/n_trials
 
-print simulate_addgeneral(100)
-print simulate_addcheaphousing(100)
-print simulate_addexpensivehousing(100)
+
+if __name__ == "__main__":
+	print simulate_addgeneral(100)
+	print simulate_addcheaphousing(100)
+	print simulate_addexpensivehousing(100)
 
 
 
