@@ -35,39 +35,56 @@ def simulation(n_renters, n_houses, higher_quality_houses = 0, lower_quality_hou
 	house_match.stable_match(renters, houses)
 
 	#do stats
-	max_price = renters[houses[0].rented_by].paying
-	median_price = renters[houses[len(renters)/2].rented_by].paying
 
-	return max_price, median_price
+	min_price = float("inf")
+	index = 0
+	for house in houses:
+		if house.current_price and house.current_price < min_price:
+			min_price = house.current_price
+			index += 1
+		elif not house.current_price:
+			break #this house was never bid on
+
+	max_price = renters[houses[0].rented_by].paying
+	median_price = renters[houses[index/2].rented_by].paying
+
+	return max_price, median_price, min_price
 
 def simulate_addgeneral(n_trials):
-	max_diff, med_diff = [], []
+	"""Return the mean change in maximum, median, and minimum housing cost
+	when additional housing is added to a restricted market."""
+	max_diff, med_diff, min_diff = [], [], []
 	for dummy in range(n_trials):
-		max_restricted, med_restricted = simulation(50, 30)
-		max_unrestricted, med_unrestricted = simulation(40, 30)
+		max_restricted, med_restricted, min_restricted = simulation(50, 30)
+		max_unrestricted, med_unrestricted, min_unrestricted = simulation(40, 30)
 		max_diff.append(max_restricted - max_unrestricted)
 		med_diff.append(med_restricted - med_unrestricted)
-	return sum(max_diff)/n_trials, sum(med_diff)/n_trials
+		min_diff.append(min_restricted - min_unrestricted)
+	return sum(max_diff)/n_trials, sum(med_diff)/n_trials, sum(min_diff)/n_trials
 
 def simulate_addcheaphousing(n_trials):
-	max_diff, med_diff = [], []
+	"""Return the mean change in maximum, median, and minimum housing cost
+	when low-end housing is added to a restricted market."""
+	max_diff, med_diff, min_diff = [], [], []
 	for dummy in range(n_trials):
-		max_nolo, med_nolo = simulation(50, 30)
-		max_lo, med_lo = simulation(50, 30, lower_quality_houses = 10) #more renters than houses; add low-end housing
+		max_nolo, med_nolo, min_nolo = simulation(50, 30)
+		max_lo, med_lo, min_lo = simulation(50, 30, lower_quality_houses = 10) #more renters than houses; add low-end housing
 		max_diff.append(max_nolo - max_lo)
 		med_diff.append(med_nolo - med_lo)
-	return sum(max_diff)/n_trials, sum(med_diff)/n_trials
+		min_diff.append(min_nolo - min_lo)
+	return sum(max_diff)/n_trials, sum(med_diff)/n_trials, sum(min_diff)/n_trials
 
 def simulate_addexpensivehousing(n_trials):
-	"""Return the mean change in maximum and median housing cost when
+	"""Return the mean change in maximum, median, and minimum housing cost when
 	high-end housing is added to a restricted market"""
-	max_diff, med_diff = [], []
+	max_diff, med_diff, min_diff = [], [], []
 	for dummy in range(n_trials):
-		max_nohi, med_nohi = simulation(50, 30)
-		max_hi, med_hi = simulation(50, 30, higher_quality_houses = 10) #more renters than houses; add high-end housing
+		max_nohi, med_nohi, min_nohi = simulation(50, 30)
+		max_hi, med_hi, min_hi = simulation(50, 30, higher_quality_houses = 10) #more renters than houses; add high-end housing
 		max_diff.append(max_nohi - max_hi)
 		med_diff.append(med_nohi - med_hi)
-	return sum(max_diff)/n_trials, sum(med_diff)/n_trials
+		min_diff.append(min_nohi - min_hi)
+	return sum(max_diff)/n_trials, sum(med_diff)/n_trials, sum(min_diff)/n_trials
 
 print simulate_addgeneral(100)
 print simulate_addcheaphousing(100)

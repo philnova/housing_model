@@ -17,7 +17,7 @@ class Renter(object):
 
 class House(object):
     def __init__(self, niceness):
-        self.current_price = 100
+        self.current_price = None
         self.niceness = niceness
         self.__occupied = False
         self.rented_by = None

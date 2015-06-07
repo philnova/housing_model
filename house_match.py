@@ -31,12 +31,16 @@ def stable_match(renters, houses, increment = 1.05):
         for r in renters:
             if not r.get_matched():
                 for house in houses: #must be ordered by quality!
+                    if not house.current_price: #house unoccupied
+                        house.current_price = 100
+
                     if r.willingness_to_pay > house.current_price * increment:
                         #either house is unoccupied or renter outbids current occupant
 
                         if house.rented_by != None: #someone was already in apartment
                             renters[house.rented_by].set_matched(False) #old renter is evicted
                             renters[house.rented_by].paying = 0 
+                            
 
                         house.rented_by = r.ID
                         r.set_matched() #renter moves in
